@@ -1,0 +1,151 @@
+;;(require 'package)
+;;(add-to-list 'package-archives
+;;             '("melpa-stable" . "https://stable.melpa.org/packages/"))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (js2-mode auctex))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;;;==================================== My customization =================================
+
+;;Init File location: /Users/yshen/.emacs
+
+;;(setq mac-function-modifier 'control)
+
+;;list of modifier keys
+;mac-function-modifier
+;mac-control-modifier
+;mac-command-modifier
+;mac-option-modifier
+;mac-right-command-modifier
+;mac-right-control-modifier
+;mac-right-option-modifier
+
+;; use y or n instead of yes or no
+(fset 'yes-or-no-p 'y-or-n-p)
+
+;;;---------------------------------------- js2 ------------------------------------------
+
+(require 'js2-mode)
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+;; Better imenu
+(add-hook 'js2-mode-hook #'js2-imenu-extras-mode)
+
+;;;----------------------------------------- LaTeX ---------------------------------------
+
+(setenv "PATH" (concat (getenv "PATH") ":/Library/TeX/texbin/"))  
+(setq exec-path (append exec-path '("/Library/TeX/texbin/")))
+;; Add /Library/TeX/texbin/ to emacs' PATH variable
+
+;;;---------------------------------------------------------------------------------------
+
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode) ;; Enable LaTeX Math mode by default
+;(add-hook 'LaTeX-mode-hook 'turn-on-reftex) ;; Enable RefTeX by default
+(add-hook 'text-mode-hook 'turn-on-auto-fill) ;; Turn on auto-fill-mode
+(add-hook 'LaTeX-mode-hook
+	  (lambda () (set (make-variable-buffer-local 'TeX-electric-math)
+			  (cons "$" "$")))) ;; Automatically complete a pair of dollar signs
+;(add-hook 'LaTeX-mode-hook 'flyspell-mode) ;; Enable Flyspell by default
+;(require 'reftex)
+
+;;;---------------------------------------------------------------------------------------
+
+(setq LaTeX-electric-left-right-brace 1) ;; Automatically complete a pair of braces
+(setq TeX-electric-sub-and-superscript 1) ;; Automatically insert a pair of braces after superscripts and subscripts
+(setq TeX-parse-self t) ;; Enable parse on load.
+(setq TeX-auto-save t) ;; Enable parse on save.
+(setq-default TeX-master nil) ;; Query for master file.
+;(setq reftex-plug-into-AUCTeX t) ;; Enable AUCTeX-RefTeX Interface
+(setq inhibit-startup-screen t) ;; Disable startup message
+
+;;;-------------------------------------------------------------------
+(defun find-user-init-file ()
+  "Edit the `user-init-file', in another window."
+  (interactive)
+  (find-file-other-window user-init-file))
+(global-set-key (kbd "C-c i") 'find-user-init-file)
+
+;;;-------------------------------------------------------------------
+(defun insert-frac ()
+  "Insert  \\frac{}{} and position point before the first right brace."
+  (interactive)
+  (progn
+    (insert "\\frac{}{}")
+    (backward-char)
+    (backward-char)
+    (backward-char)))
+(global-set-key "\C-cf" 'insert-frac)
+
+;;;-------------------------------------------------------------------
+(defun insert-sqrt ()
+  "Insert  \\sqrt{} and position point before the right brace."
+  (interactive)
+  (progn
+    (insert "\\sqrt{}")
+    (backward-char)))
+(global-set-key "\C-cs"   'insert-sqrt)
+;;;-------------------------------------------------------------------
+(defun insert-enum ()
+  "Insert an enumerate environment."
+  (interactive)
+  (progn
+    (insert "\\begin{enumerate}
+\\item
+")
+    (save-excursion (insert "
+\\end{enumerate}"))))
+(global-set-key "\ee"     'insert-enum)
+;;;-------------------------------------------------------------------
+(defun insert-proof ()
+  "Insert a proof environment."
+  (interactive)
+  (progn
+    (insert "\\begin{proof}
+")
+    (save-excursion (insert "
+\\end{proof}"))))
+(global-set-key "\ep"     'insert-proof)
+;;;-------------------------------------------------------------------
+(defun insert-align-wo-number ()
+  "Insert an align environment without number."
+  (interactive)
+  (progn
+    (insert "\\begin{align*}
+")
+    (save-excursion (insert "
+\\end{align*}"))))
+(global-set-key "\ea"     'insert-align-wo-number)
+;;;-------------------------------------------------------------------
+(defun insert-equation-wo-number ()
+  "Insert an equation* environment."
+  (interactive)
+  (progn
+    (insert "\\begin{equation*}
+")
+    (save-excursion (insert "
+\\end{equation*}"))))
+(global-set-key "\eq"     'insert-equation-wo-number)
+;;;-------------------------------------------------------------------
+(defun insert-eq-split ()
+  "Insert an equation* and split environment."
+  (interactive)
+  (progn
+    (insert "\\begin{equation*}
+\\begin{split}
+")
+    (save-excursion (insert "
+\\end{split}
+\\end{equation*}"))))
+(global-set-key "\es" 'insert-eq-split)
+
+;;;================================ End of Customization =================================
